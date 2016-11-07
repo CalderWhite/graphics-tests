@@ -1,4 +1,4 @@
-\import javax.swing.JOptionPane;
+import javax.swing.JOptionPane;
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JFrame;
