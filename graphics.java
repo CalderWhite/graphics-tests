@@ -1,4 +1,4 @@
-import javax.swing.JOptionPane;
+\import javax.swing.JOptionPane;
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JFrame;
@@ -44,20 +44,27 @@ class gui{
 			repaint();
 		}
 		public void paint(Graphics g){
-			for(i : renderList){
-				switch(i.drawing_type){
+			for(int i=0;i<renderList.size();i++){
+				System.out.println(renderList.get(i));
+				//drawing td = renderList.get(i);
+				/*
+				switch(td.drawing_type){
 					case "line":
 						break;
 					case "rect":
-						g.setColor(i.build[5])
-						if(i.build[4]){
-							g.fillRect(i.build[0],i.build[1],i.build[2],i.build[3])
+						/*
+						g.setColor(i.build.get(5));
+						if(i.build.get(4)){
+							g.fillRect(i.build.get(0),i.build.get(1),i.build.get(2),i.build.get(3));
 						}
 						else{
-							g.drawRect(i.build[0],i.build[1],i.build[2],i.build[3])
+							g.drawRect(i.build.get(0),i.build.get(1),i.build.get(2),i.build.get(3));
 						}
+						*
+						break;
 						
 				}
+				*/
 			}
 		}
 	}
@@ -75,6 +82,6 @@ class gui{
 class graphics{
 	public static void main(String[] args){
 		gui g = new gui();
-		g.run()
+		g.run();
 	}
 }
