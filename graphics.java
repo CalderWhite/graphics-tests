@@ -2,7 +2,7 @@ import javax.swing.JOptionPane;
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JFrame;
-import java.utils.ArrayList;
+import java.utils.arrayList;
 
 class graphics{
 	class draw_object{
@@ -26,7 +26,7 @@ class graphics{
 		}
 	}
 	class Display extends JFrame{
-		ArrayList<ArrayList> renderList = new ArrayList<ArrayList>();
+		arrayList<arrayList> renderList = new arrayList<arrayList>();
 		public Display(){
 			repaint();
 
