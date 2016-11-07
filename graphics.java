@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 class gui{
+	public Integer[] arr(Integer... args){
+		List x = new ArrayList();
+		for(Integer item : args){
+			x.add(item)
+		}
+		return x;
+	}
 	class drawing{
 		/* Proper input of respective types:
 		 * LINE:
@@ -77,6 +84,9 @@ class gui{
 		screen.setVisible(true);
 		screen.setDefaultCloseOperation(screen.EXIT_ON_CLOSE);
 		//draw things
+		//drawing d1 = new drawing("rect",Arrays.)
+		//screen.renderList.add(d1);
+		System.out.println(arr(1,2,3,4));
 	}
 }
 class graphics{
