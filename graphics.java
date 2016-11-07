@@ -2,31 +2,30 @@ import javax.swing.JOptionPane;
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JFrame;
-import java.utils.arrayList;
+import java.util.ArrayList;
+import java.util.List;
 
-class graphics{
-	class draw_object{
-		int x1;
-		int y1;
-		int x2;
-		int y2;
-		boolean filled;
-		int r1;
-		public create_line
-
-		String drawing_type;
-		public draw_object(String type){
-			switch type{
+class gui{
+	class drawing{
+		String draw_type;
+		List build;
+		public drawing(String type, List drawing_build){
+			switch(type){
 				case "line":
-					drawing_type = "line";
+					draw_type = type;
+					build = drawing_build;
+					break;
+				case "rect":
+					draw_type = type;
+					build = drawing_build;
 					break;
 				default:
-					System.out.println("[" + type + "] is not an accepted drawing type.")
+					System.out.println("[" + type + "] is not an accepted draw type.");
 			}
 		}
 	}
 	class Display extends JFrame{
-		arrayList<arrayList> renderList = new arrayList<arrayList>();
+		List renderList = new ArrayList();
 		public Display(){
 			repaint();
 
@@ -40,7 +39,7 @@ class graphics{
 			//for()
 		}
 	}
-	public static void main(String[] args){
+	public void run(){
 		//define Display parameters
 		Display screen = new Display();
 		screen.setTitle("Test");
@@ -49,5 +48,11 @@ class graphics{
 		screen.setVisible(true);
 		screen.setDefaultCloseOperation(screen.EXIT_ON_CLOSE);
 		//draw things
+	}
+}
+class graphics{
+	public static void main(String[] args){
+		gui g = new gui();
+		g.run()
 	}
 }
