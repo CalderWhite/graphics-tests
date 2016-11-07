@@ -7,6 +7,16 @@ import java.util.List;
 
 class gui{
 	class drawing{
+		/* Proper input of respective types:
+		 * LINE:
+		 *	[X1,Y1,X2,Y2,WIDTH,COLOR]
+		 *	types:
+		 *	[int,int,int,int,int,java.awt.Color]
+		 * RECTANGLE (RECT):
+		 *	[X,Y,WIDTH,HEIGHT,FILLED,COLOR]
+		 *	types:
+		 *	[int,int,int,int,boolean,java.awt.Color]
+		*/
 		String draw_type;
 		List build;
 		public drawing(String type, List drawing_build){
@@ -34,9 +44,21 @@ class gui{
 			repaint();
 		}
 		public void paint(Graphics g){
-			g.setColor(new Color(0,255,0));
-			g.fillRect(0,0,200,100);
-			//for()
+			for(i : renderList){
+				switch(i.drawing_type){
+					case "line":
+						break;
+					case "rect":
+						g.setColor(i.build[5])
+						if(i.build[4]){
+							g.fillRect(i.build[0],i.build[1],i.build[2],i.build[3])
+						}
+						else{
+							g.drawRect(i.build[0],i.build[1],i.build[2],i.build[3])
+						}
+						
+				}
+			}
 		}
 	}
 	public void run(){
