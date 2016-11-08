@@ -6,38 +6,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 class gui{
-	public List arr(Integer... args){
-		List x = new ArrayList();
-		for(Integer item : args){
-			x.add(item);
-		}
-		return x;
-	}
 	class drawing{
-		/* Proper input of respective types:
-		 * LINE:
-		 *	[X1,Y1,X2,Y2,WIDTH,COLOR]
-		 *	types:
-		 *	[int,int,int,int,int,java.awt.Color]
-		 * RECTANGLE (RECT):
-		 *	[X,Y,WIDTH,HEIGHT,FILLED,COLOR]
-		 *	types:
-		 *	[int,int,int,int,boolean,java.awt.Color]
-		*/
-		String draw_type;
-		List build;
-		public drawing(String type, List drawing_build){
-			switch(type){
-				case "line":
-					draw_type = type;
-					build = drawing_build;
-					break;
-				case "rect":
-					draw_type = type;
-					build = drawing_build;
-					break;
-				default:
-					System.out.println("[" + type + "] is not an accepted draw type.");
+		public class rect{
+			String type = "rect";
+			int x1;
+			int y1;
+			int width;
+			int height;
+			boolean filled;
+			Color color;
+			public rect(int _x1, int _y1, int _width,int _height,boolean _filled,Color _color){
+				x1 = _x1;
+				y1 = _y1;
+				width = _width;
+				height = _height;
+				filled = _filled;
+				color = _color;
+			}
+		}
+		public class line{
+			String type = "line";
+			int x1;
+			int y1;
+			int x2;
+			int y2;
+			Color color;
+			public line(int _x1, int _y1, int _x2, int _y2, Color _color){
+				x1 = _x1;
+				y1 = _y1;
+				x2 = _x2;
+				y2 = _y2;
+				color = _color;
 			}
 		}
 	}
@@ -54,24 +53,6 @@ class gui{
 			for(int i=0;i<renderList.size();i++){
 				System.out.println(renderList.get(i));
 				//drawing td = renderList.get(i);
-				/*
-				switch(td.drawing_type){
-					case "line":
-						break;
-					case "rect":
-						/*
-						g.setColor(i.build.get(5));
-						if(i.build.get(4)){
-							g.fillRect(i.build.get(0),i.build.get(1),i.build.get(2),i.build.get(3));
-						}
-						else{
-							g.drawRect(i.build.get(0),i.build.get(1),i.build.get(2),i.build.get(3));
-						}
-						*
-						break;
-						
-				}
-				*/
 			}
 		}
 	}
@@ -84,9 +65,7 @@ class gui{
 		screen.setVisible(true);
 		screen.setDefaultCloseOperation(screen.EXIT_ON_CLOSE);
 		//draw things
-		//drawing d1 = new drawing("rect",Arrays.)
-		//screen.renderList.add(d1);
-		System.out.println(arr(1,2,3,4));
+		drawing d1 = new drawing.line(1,1,1,1,Color.GREEN);
 	}
 }
 class graphics{
