@@ -7,7 +7,10 @@ import java.util.List;
 
 class gui{
 	class drawing{
-		public class rect{
+		public drawing(){
+			//nothing here
+		}
+		class rect{
 			String type = "rect";
 			int x1;
 			int y1;
@@ -24,7 +27,7 @@ class gui{
 				color = _color;
 			}
 		}
-		public class line{
+		class line{
 			String type = "line";
 			int x1;
 			int y1;
@@ -65,7 +68,9 @@ class gui{
 		screen.setVisible(true);
 		screen.setDefaultCloseOperation(screen.EXIT_ON_CLOSE);
 		//draw things
-		drawing d1 = new drawing.line(1,1,1,1,Color.GREEN);
+		drawing d = new drawing();
+		drawing.line l = d.new line(10,10,200,100,Color.GREEN);
+		screen.renderList.add(l);
 	}
 }
 class graphics{
