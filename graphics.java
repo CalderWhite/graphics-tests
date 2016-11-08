@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 class gui{
-	public Integer[] arr(Integer... args){
+	public List arr(Integer... args){
 		List x = new ArrayList();
 		for(Integer item : args){
-			x.add(item)
+			x.add(item);
 		}
 		return x;
 	}
