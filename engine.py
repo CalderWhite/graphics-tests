@@ -1,5 +1,4 @@
 # Copyright (c) Calder White 2017
-# version 1.0.1
 import pygame, os, json, math
 from pygame.locals import *
 from OpenGL.GL import *
@@ -231,6 +230,25 @@ class Camera(object):
     def __init__(self):
         self.pos = [0,0,0]
         self.rot = [0,0]
+class dev_window(object):
+    def __init__(self):
+        import tkinter
+        self.root = tkinter.Tk()
+        w = 100
+        xoff = self.root.winfo_screenwidth() - (2*w)
+        self.root.geometry("%sx200+%s+0" % (w,xoff))
+        self.root.title("Engine Dev Window")
+        self.values = {
+            "rot[0]" : tkinter.Label(self.root, text = "rot[0]:null", justify="left", font=("Courier", 8)),
+            "rot[1]" : tkinter.Label(self.root, text = "rot[1]:null", justify="left", font=("Courier", 8)),
+            "x     " : tkinter.Label(self.root, text = "x:null", justify="left", font=("Courier", 8)),
+            "y     " : tkinter.Label(self.root, text = "y:null", justify="left", font=("Courier", 8)),
+            "z     " : tkinter.Label(self.root, text = "z:null", justify="left", font=("Courier", 8)),
+        }
+        for node in self.values:
+            self.values[node].grid(row=list(self.values).index(node),column=0)
+    def update(self):
+        self.root.update()
 class engine(object):
     def __init__(self,use_mouse=True):
         # properties
@@ -238,6 +256,7 @@ class engine(object):
         self.shapes_manager = shape_manager()
         self.shapes_manager.select_world("myworld.json")
         self.camera = Camera()
+        self.dev_mode = False
         # testing values
         if use_mouse:
             mf = self.capture_mouse
@@ -251,6 +270,13 @@ class engine(object):
             mf,
             self.key_bindings
         )
+    def toggle_dev(self):
+        if self.dev_mode:
+            self.dev_mode = False
+            self.dev_window.root.destroy()
+        else:
+            self.dev_mode = True
+            self.dev_window = dev_window()
     def stop(self,event):
         self.looping = False
         pygame.quit()
@@ -260,6 +286,8 @@ class engine(object):
     def key_bindings(self,event):
         if event.key == pygame.K_ESCAPE:
             self.stop(None)
+        elif event.key == pygame.K_t:
+            self.toggle_dev()
     def draw(self,d):
         glBegin(GL_LINES)
         for line in d["lines"]:
@@ -279,7 +307,7 @@ class engine(object):
         else:self.camera.rot[0]=abs(self.camera.rot[0]) % 360 * -1
         self.camera.rot[1]+=y
         if self.camera.rot[1]>0:self.camera.rot[1]=abs(self.camera.rot[1]) % 360
-        else:self.camera.rot[0]=abs(self.camera.rot[1]) % 360 * -1
+        else:self.camera.rot[1]=abs(self.camera.rot[1]) % 360 * -1
     def check_keys(self):
         """Please don't mess with this function.... just don't"""
         speed = 1 / 50
@@ -300,9 +328,25 @@ class engine(object):
     def mainloop(self):
         self.looping = True
         #self.camera.pos = [0,0,-5]
+        self.toggle_dev()
         while self.looping:
             self.check_keys()
             self.update()
+            if self.dev_mode:
+                for name in self.dev_window.values:
+                    if name == "x     ":
+                        value = self.camera.pos[0]
+                    elif name == "y     ":
+                        value = self.camera.pos[1]
+                    elif name == "z     ":
+                        value = self.camera.pos[2]
+                    elif name == "rot[0]":
+                        value = self.camera.rot[0]
+                    elif name == "rot[1]":
+                        value = self.camera.rot[1]
+                    self.dev_window.values[name].place(x=0,y=20*list(self.dev_window.values).index(name))
+                    self.dev_window.values[name].config(text=name + ":" + str(value))
+                self.dev_window.update()
             # update events lastly, to avoid quitting errors
             self.manager.events.update()
     def update(self):
@@ -326,3 +370,6 @@ class engine(object):
         pygame.display.flip()
         # fps stuff
         pygame.time.wait(10)
+if __name__ == '__main__':
+    e = engine()
+    e.mainloop()
