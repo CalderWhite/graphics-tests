@@ -1,9 +1,11 @@
 # Copyright (c) Calder White 2017
-import pygame, os, json, math
+import pygame, os, json, math, tkinter
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 # please note, the engine must be defined in the main thread
+
+pygame.init()
 
 class util(object):
     def cc(num):
@@ -232,7 +234,6 @@ class Camera(object):
         self.rot = [0,0]
 class dev_window(object):
     def __init__(self):
-        import tkinter
         self.root = tkinter.Tk()
         w = 100
         xoff = self.root.winfo_screenwidth() - (2*w)
@@ -325,6 +326,20 @@ class engine(object):
         if keys[pygame.K_LSHIFT]:self.camera.pos[1]+=speed
         #if keys[pygame.K_e]:self.camera.rot[0]+=speed*100
         #if keys[pygame.K_q]:self.camera.rot[0]-=speed*100
+    def update_dev_window(self):
+        for name in self.dev_window.values:
+            if name == "x     ":
+                value = self.camera.pos[0]
+            elif name == "y     ":
+                value = self.camera.pos[1]
+            elif name == "z     ":
+                value = self.camera.pos[2]
+            elif name == "rot[0]":
+                value = self.camera.rot[0]
+            elif name == "rot[1]":
+                value = self.camera.rot[1]
+            self.dev_window.values[name].place(x=0,y=20*list(self.dev_window.values).index(name))
+            self.dev_window.values[name].config(text=name + ":" + str(value))
     def mainloop(self):
         self.looping = True
         #self.camera.pos = [0,0,-5]
@@ -333,23 +348,14 @@ class engine(object):
             self.check_keys()
             self.update()
             if self.dev_mode:
-                for name in self.dev_window.values:
-                    if name == "x     ":
-                        value = self.camera.pos[0]
-                    elif name == "y     ":
-                        value = self.camera.pos[1]
-                    elif name == "z     ":
-                        value = self.camera.pos[2]
-                    elif name == "rot[0]":
-                        value = self.camera.rot[0]
-                    elif name == "rot[1]":
-                        value = self.camera.rot[1]
-                    self.dev_window.values[name].place(x=0,y=20*list(self.dev_window.values).index(name))
-                    self.dev_window.values[name].config(text=name + ":" + str(value))
+                self.update_dev_window()
                 self.dev_window.update()
             # update events lastly, to avoid quitting errors
             self.manager.events.update()
     def update(self):
+        if self.dev_mode:
+            self.update_dev_window()
+            self.dev_window.update()
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         w,h = pygame.display.get_surface().get_size()
         # clear all transformations
