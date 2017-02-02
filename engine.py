@@ -1,3 +1,4 @@
+# Copyright (c) Calder White 2017
 import pygame, os, json, math
 from pygame.locals import *
 from OpenGL.GL import *
