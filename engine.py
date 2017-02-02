@@ -2,7 +2,12 @@ import pygame, os, json, math
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+# please note, the engine must be defined in the main thread
+
 class util(object):
+    def cc(num):
+    	"""cc converts it to a different sytem which I wrote the movement equation for."""
+    	return num/ 100 * (6/3.6)
     class generate(object):
         def rect_prism(name,start_point,wlh):
             w, l, h = wlh
@@ -142,6 +147,28 @@ class util(object):
                     [len(gen["points"]) - 2,len(gen["points"]) - 1]
                 )
             return gen
+        def tri_base_pyramid(name,start_point,bh):
+            b,h = bh
+            x,y,z = start_point
+            gen = {
+                "id" : name,
+                "points" : [
+                    list(start_point),
+                    [x+b,y,z],
+                    [x+(b/2),y,z+h],
+                    [x+(b/2),y+h,z+(b/2)],
+                ],
+                "lines" : [
+                    [0,1],  # base edges
+                    [1,2],
+                    [2,0], # height to base edges
+                    [0,3],
+                    [1,3],
+                    [2,3]
+
+                ]
+            }
+            return gen
 class event_handler(object):
     def __init__(self,triggers):
         self.triggers = triggers
@@ -202,7 +229,7 @@ class Camera(object):
     def __init__(self):
         self.pos = [0,0,0]
         self.rot = [0,0]
-class gfx_engine(object):
+class engine(object):
     def __init__(self,use_mouse=True):
         # properties
         self.looping = False
@@ -222,12 +249,6 @@ class gfx_engine(object):
             mf,
             self.key_bindings
         )
-        # adding test shapes to the manager
-        j = util.generate.rect_prism("cube",[3,0,0],[1,1,1])
-        j1 = util.generate.rect_prism("cube2",[-3,0,0],[1,1,1])
-        self.shapes_manager.add_object(util.generate.rect_prism("x",[0,0,0],[0,0,3]))
-        self.shapes_manager.add_object(j)
-        self.shapes_manager.add_object(j1)
     def stop(self,event):
         self.looping = False
         pygame.quit()
@@ -258,7 +279,7 @@ class gfx_engine(object):
         speed = 1 / 50
         keys = pygame.key.get_pressed()
         # self.cc converts it to a different sytem which I wrote this equation for
-        x,z = speed * math.sin(self.cc(self.camera.rot[0])),speed*math.cos(self.cc(self.camera.rot[0]))
+        x,z = speed * math.sin(util.cc(self.camera.rot[0])),speed*math.cos(util.cc(self.camera.rot[0]))
         x*=-1
         ##print([float(str(x)[:5]),float(str(z)[:5])],self.camera.rot)
         # keysss
@@ -270,36 +291,32 @@ class gfx_engine(object):
         if keys[pygame.K_LSHIFT]:self.camera.pos[1]+=speed
         if keys[pygame.K_e]:self.camera.rot[0]+=speed*100
         if keys[pygame.K_q]:self.camera.rot[0]-=speed*100
-    def cc(self,num):
-        """self.cc converts it to a different sytem which I wrote the movement equation for."""
-        return num/ 100 * (6/3.6)
-    def run(self):
+    def mainloop(self):
         self.looping = True
-        self.camera.pos = [0,0,-5]
+        #self.camera.pos = [0,0,-5]
         while self.looping:
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-            w,h = pygame.display.get_surface().get_size()
             self.check_keys()
-            # clear all transformations
-            glLoadIdentity()
-            # set perspective, since it is also reset when Identity is loaded
-            gluPerspective(45, (w/h), 0.1, 50.0)
-            # set viewing angle
-            # -ALWAYS rotate along the xy axis first
-            glRotatef(self.camera.rot[1],1,0,0)
-            # then the xz axis
-            glRotatef(self.camera.rot[0],0,1,0)
-            # move world according to camera's position
-            camx,camy,camz = self.camera.pos
-            glTranslatef(camx,camy,camz)
-            # render all points
-            self.render_all()
-            # update pygame display.
-            pygame.display.flip()
-            # fps stuff
-            pygame.time.wait(10)
+            self.update()
             # update events lastly, to avoid quitting errors
             self.manager.events.update()
-if __name__ == '__main__':
-    engine = gfx_engine()
-    engine.run()
+    def update(self):
+        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        w,h = pygame.display.get_surface().get_size()
+        # clear all transformations
+        glLoadIdentity()
+        # set perspective, since it is also reset when Identity is loaded
+        gluPerspective(45, (w/h), 0.1, 50.0)
+        # set viewing angle
+        # -ALWAYS rotate along the xy axis first
+        glRotatef(self.camera.rot[1],1,0,0)
+        # then the xz axis
+        glRotatef(self.camera.rot[0],0,1,0)
+        # move world according to camera's position
+        camx,camy,camz = self.camera.pos
+        glTranslatef(camx,camy,camz)
+        # render all points
+        self.render_all()
+        # update pygame display.
+        pygame.display.flip()
+        # fps stuff
+        pygame.time.wait(10)
