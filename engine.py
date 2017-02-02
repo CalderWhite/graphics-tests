@@ -193,6 +193,7 @@ class window_manager(object):
             pygame.KEYDOWN : check_keys
         }
         self.events = event_handler(tl)
+        pygame.mouse.set_pos((dimensions[0]/2,dimensions[1]/2))
         pygame.mouse.set_visible(False)
         pygame.event.set_grab(1)
     def p(self,*args,**kwargs):
@@ -251,8 +252,9 @@ class dev_window(object):
     def update(self):
         self.root.update()
 class engine(object):
-    def __init__(self,use_mouse=True):
+    def __init__(self,use_mouse=True,scale=[0.05,0.05,0.05]):
         # properties
+        self.scale = scale
         self.looping = False
         self.shapes_manager = shape_manager()
         self.shapes_manager.select_world("myworld.json")
@@ -343,7 +345,7 @@ class engine(object):
     def mainloop(self):
         self.looping = True
         #self.camera.pos = [0,0,-5]
-        self.toggle_dev()
+        #self.toggle_dev()
         while self.looping:
             self.check_keys()
             self.update()
@@ -370,12 +372,11 @@ class engine(object):
         # move world according to camera's position
         camx,camy,camz = self.camera.pos
         glTranslatef(camx,camy,camz)
+        # scale everything lastly
+        glScalef(self.scale[0],self.scale[1],self.scale[2])
         # render all points
         self.render_all()
         # update pygame display.
         pygame.display.flip()
         # fps stuff
         pygame.time.wait(10)
-if __name__ == '__main__':
-    e = engine()
-    e.mainloop()
