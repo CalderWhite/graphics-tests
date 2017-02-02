@@ -1,4 +1,5 @@
 # Copyright (c) Calder White 2017
+# version 1.0.1
 import pygame, os, json, math
 from pygame.locals import *
 from OpenGL.GL import *
@@ -273,8 +274,12 @@ class engine(object):
     def capture_mouse(self,event):
         x,y = event.rel
         x/=8;y/=8
-        self.camera.rot[0]+=x;
-        self.camera.rot[1]+=y;
+        self.camera.rot[0]+=x
+        if self.camera.rot[0]>0:self.camera.rot[0]=abs(self.camera.rot[0]) % 360
+        else:self.camera.rot[0]=abs(self.camera.rot[0]) % 360 * -1
+        self.camera.rot[1]+=y
+        if self.camera.rot[1]>0:self.camera.rot[1]=abs(self.camera.rot[1]) % 360
+        else:self.camera.rot[0]=abs(self.camera.rot[1]) % 360 * -1
     def check_keys(self):
         """Please don't mess with this function.... just don't"""
         speed = 1 / 50
@@ -290,8 +295,8 @@ class engine(object):
         if keys[pygame.K_a]:self.camera.pos[0]+=z;self.camera.pos[2]-=x
         if keys[pygame.K_SPACE]:self.camera.pos[1]-=speed
         if keys[pygame.K_LSHIFT]:self.camera.pos[1]+=speed
-        if keys[pygame.K_e]:self.camera.rot[0]+=speed*100
-        if keys[pygame.K_q]:self.camera.rot[0]-=speed*100
+        #if keys[pygame.K_e]:self.camera.rot[0]+=speed*100
+        #if keys[pygame.K_q]:self.camera.rot[0]-=speed*100
     def mainloop(self):
         self.looping = True
         #self.camera.pos = [0,0,-5]
